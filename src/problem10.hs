@@ -22,5 +22,11 @@ solve = do
 
   readIORef sum
 
-main = print =<< solve
+---
+
+primes = 2 : 3 : [n | n <- [4..], all (\p -> n `mod` p /= 0) $ takeWhile (\p -> p * p <= n) primes]
+
+solve' = sum $ takeWhile (< bound) primes
+
+main = print $ solve'
 
