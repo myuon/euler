@@ -7,8 +7,11 @@ bound = 2000000
 primeArray :: IO (V.IOVector Bool)
 primeArray = do
   vec <- V.replicate bound False
-  forM_ (takeWhile (\n -> n * n <= bound) [2..bound]) $ \n -> do
-    forM_ (takeWhile (< bound) $ map (*n) $ tail [1..]) $ \i -> V.write vec i True
+  forM_ (takeWhile (\n -> n * n <= bound) [2..]) $ \n -> do
+    b <- V.read vec n
+    when (not b) $ do
+      forM_ (takeWhile (< bound) $ map (*n) $ [2..]) $ \i -> do
+        V.unsafeWrite vec i True
 
   return vec
 
@@ -28,5 +31,5 @@ primes = 2 : 3 : [n | n <- [4..], all (\p -> n `mod` p /= 0) $ takeWhile (\p -> 
 
 solve' = sum $ takeWhile (< bound) primes
 
-main = print $ solve'
+main = print =<< solve
 
